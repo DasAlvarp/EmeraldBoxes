@@ -1,0 +1,58 @@
+<html>
+	<input type="file" onchange="previewFile()"><br>
+	<img src="" alt="previewFile" id="back">
+
+	<canvas id="textCanvas" width="300" height="400" style="border:1px solid#000000;">
+		
+	</canvas>
+	<button type="button" onclick="drawBoxes()">Draw</button>
+	<button onclick="setBackground()">Load</button>
+</html>
+
+<script type="text/javascript">
+	function drawBoxes()
+	{
+		var image = document.getElementById("back");//get image so height and width can be matche dlater.
+
+		
+		var c = document.getElementById("textCanvas");
+		var ctx = c.getContext("2d");
+		ctx.canvas.width = image.width;
+		ctx.canvas.height = image.height;
+		ctx.fillRect(20, 20, 150, 100);
+
+		ctx.drawImage(image, 0, 0);
+		
+	}
+
+	function setBackground()
+	{
+		// body...
+	}
+
+	function previewFile()
+	{
+		var preview = document.querySelector('img'); //selects the query named img
+		var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+		var reader  = new FileReader();
+
+		reader.onloadend = function ()
+		{
+			preview.src = reader.result;
+			
+		}
+
+		if (file)
+		{
+			reader.readAsDataURL(file); //reads the data as a URL
+
+
+		}
+		else
+		{
+			preview.src = "";
+		}
+	}
+
+	previewFile();
+</script>
