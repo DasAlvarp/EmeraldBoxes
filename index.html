@@ -31,7 +31,11 @@
 		ctx.canvas.width = image.width;
 		ctx.canvas.height = image.height;
 		ctx.drawImage(image, 0, 0);
+
+		ctx.globalAlpha = 0.2;
+		ctx.fillStyle="#FF0000";
 		ctx.fillRect(x1, y1, x2 - x1, y2 - y1);//x1, y1, x2 - x1, y2 - y1
+		ctx.globalAlpha = 1.0;
 	}
 
 	function lockCoords()
