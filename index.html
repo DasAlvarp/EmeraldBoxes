@@ -9,10 +9,32 @@
 	<button onclick="setBackground()">Load</button>
 	<br>
 
-	X1: <input type="number" id="x1">
-	Y1: <input type="number" id="y1"><br>
-	X2: <input type="number" id="x2">
-	Y2: <input type="number" id="y2"><br>
+	Physics box: <br>
+	<div id="physBox">
+		X1: <input type="number" id="x1">
+		Y1: <input type="number" id="y1"><br>
+		X2: <input type="number" id="x2">
+		Y2: <input type="number" id="y2"><br>
+	</div>
+
+	<br>
+	Hitbox<br>
+	<div id="hitboxes">
+		X1: <input type="number" id="x1hit">
+		Y1: <input type="number" id="y1hit"><br>
+		X2: <input type="number" id="x2hit">
+		Y2: <input type="number" id="y2hit"><br>
+		<button onclick="addHitbox()"> Update Hitboxes</button><br>
+		<table id="hitTable">
+			<tr>
+				<th>x1</th>
+				<th>y1</th>
+				<th>x2</th>
+				<th>y2</th>
+				<th>delete</th>
+			</tr>
+		</table>
+	</div>
 	<button onclick="lockCoords()">Lock coordinates</button>
 </html>
 
@@ -21,6 +43,43 @@
 	var x2 = 400;
 	var y1 = 0;
 	var y2 = 400;
+
+	var x1hits = [];
+	var x2hits = [];
+	var y1hits = [];
+	var y2hits = [];
+
+
+	function addHitbox()
+	{
+		x1hits.push(parseInt(document.getElementById("x1hit").value));
+		x2hits.push(parseInt(document.getElementById("x2hit").value));
+		y1hits.push(parseInt(document.getElementById("y1hit").value));
+		y2hits.push(parseInt(document.getElementById("y2hit").value));
+		updateHitbox();
+	}
+
+	function updateHitbox()
+	{
+		//now update the html:
+		var htmlToReplace = "<tr><th>x1</th><th>y1</th><th>x2</th><th>y2</th><th>delete</th></tr>";
+		for(var x = 0; x < x1hits.length; x++)
+		{
+			htmlToReplace += "<tr><th>" + x1hits[x] + "</th><th>" + y1hits[x] + "</th><th>" + x2hits[x] + "</th><th>" + y2hits + "</th><th><button onclick=deleteHitbox(" + x + ")>Delete</button></th></tr>";
+		}
+
+		document.getElementById("hitTable").innerHTML = htmlToReplace;
+	}
+
+	function deleteHitbox(index)
+	{
+		x1hits.splice(index, 1);
+		x2hits.splice(index, 1);
+		y1hits.splice(index, 1);
+		y2hits.splice(index, 1);
+
+		updateHitbox();
+	}
 
 	function drawBoxes()
 	{
@@ -32,10 +91,28 @@
 		ctx.canvas.height = image.height;
 		ctx.drawImage(image, 0, 0);
 
+		drawPhys(ctx);
+		drawHit(ctx);
+	}
+
+	//draw phyisics box
+	function drawPhys(ctx)
+	{
 		ctx.globalAlpha = 0.2;
-		ctx.fillStyle="#FF0000";
+		ctx.fillStyle="#FFFF00";
 		ctx.fillRect(x1, y1, x2 - x1, y2 - y1);//x1, y1, x2 - x1, y2 - y1
 		ctx.globalAlpha = 1.0;
+	}
+
+	//draw hitboxes
+	function drawHit(ctx)
+	{
+		ctx.globalAlpha = 0.2;
+		ctx.fillStyle="#FF0000";
+		for(var x = 0; x < x1hits.length; x++)
+		{
+			ctx.fillRect(x1hits[x], y1hits[x], x2hits[x] - x1hits[x], y2hits[x] - y1hits[x]);
+		}
 	}
 
 	function lockCoords()
