@@ -1,28 +1,45 @@
 <html>
 	<input type="file" onchange="previewFile()"><br>
-	<img src="" alt="previewFile" id="back">
+	<img src="" alt="previewFile" id="back" hidden="true">
 
 	<canvas id="textCanvas" width="300" height="400" style="border:1px solid#000000;">
 		
 	</canvas>
 	<button type="button" onclick="drawBoxes()">Draw</button>
 	<button onclick="setBackground()">Load</button>
+	<br>
+
+	X1: <input type="number" id="x1">
+	Y1: <input type="number" id="y1"><br>
+	X2: <input type="number" id="x2">
+	Y2: <input type="number" id="y2"><br>
+	<button onclick="lockCoords()">Lock coordinates</button>
 </html>
 
 <script type="text/javascript">
+	var x1 = 0;
+	var x2 = 400;
+	var y1 = 0;
+	var y2 = 400;
+
 	function drawBoxes()
 	{
 		var image = document.getElementById("back");//get image so height and width can be matche dlater.
-
-		
 		var c = document.getElementById("textCanvas");
 		var ctx = c.getContext("2d");
+
 		ctx.canvas.width = image.width;
 		ctx.canvas.height = image.height;
-		ctx.fillRect(20, 20, 150, 100);
-
 		ctx.drawImage(image, 0, 0);
-		
+		ctx.fillRect(x1, y1, x2 - x1, y2 - y1);//x1, y1, x2 - x1, y2 - y1
+	}
+
+	function lockCoords()
+	{
+		x1 = parseInt(document.getElementById("x1").value);
+		x2 = parseInt(document.getElementById("x2").value);
+		y1 = parseInt(document.getElementById("y1").value);
+		y2 = parseInt(document.getElementById("y2").value);
 	}
 
 	function setBackground()
