@@ -65,7 +65,7 @@
 		var htmlToReplace = "<tr><th>x1</th><th>y1</th><th>x2</th><th>y2</th><th>delete</th></tr>";
 		for(var x = 0; x < x1hits.length; x++)
 		{
-			htmlToReplace += "<tr><th>" + x1hits[x] + "</th><th>" + y1hits[x] + "</th><th>" + x2hits[x] + "</th><th>" + y2hits + "</th><th><button onclick=deleteHitbox(" + x + ")>Delete</button></th></tr>";
+			htmlToReplace += "<tr><th> <input type=\"number\" id=\"x1hit" + x + "\" value=\""+x1hits[x]+"\"></th><th><input type=\"number\" id=\"y1hit" + x + "\" value=\"" + y1hits[x] + "\"></th><th><input type=\"number\" id=\"x2hit" + x + "\" value=\"" + x2hits[x] + "\"></th><th>" + y2hits[x] + "</th><th><button onclick=deleteHitbox(" + x + ")>Delete</button></th></tr>";
 		}
 
 		document.getElementById("hitTable").innerHTML = htmlToReplace;
