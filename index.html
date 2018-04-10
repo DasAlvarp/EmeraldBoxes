@@ -1,6 +1,12 @@
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
 <html>
 	<input type="file" onchange="previewFile()"><br>
 	<img src="" alt="previewFile" id="back" hidden="true">
+
+	<input type="file" onchange="getCharTable()"><br>
 
 	<canvas id="textCanvas" width="300" height="400" style="border:1px solid#000000;">
 		
@@ -10,7 +16,7 @@
 
 	<input type="file" onchange="loadChar()"><br>
 	State: <input type="number" id="state">
-	<button onclick="setSetState()">Set Button</button>
+	<button onclick="setState()">Set Button</button>
 
 	<br>
 	Physics box: <br>
@@ -63,6 +69,12 @@
 </html>
 
 <script type="text/javascript">
+	var path = "";
+	var stateTable;
+	var state;
+	var imgTable;
+	var img;
+
 	var x1 = 0;
 	var x2 = 400;
 	var y1 = 0;
@@ -240,6 +252,30 @@
 	{
 		// body...
 	}
+	
+/*	$(document).ready(function() {
+		$.ajax({
+			type: "GET",
+			url: "data.txt",
+			dataType: "text",
+			success: function(data) {loadCharTable(data);}
+    	});
+	});
+*/
+	loadChar()
+	{
+		document.getElementById("state").value = 0;//stateTable[0].State;
+
+		var file = document.querySelector('input[type=file]').files[0]; //sames as here
+		document.getElementById("state").value = 1;//stateTable[0].State;
+		loadCharTable(file)
+	}
+
+	function loadCharTable(csv)
+	{
+//		stateTable = $.csv.toObjects(csv);
+		document.getElementById("state").value = 2;//stateTable[0].State;
+	}
 
 	function previewFile()
 	{
@@ -255,9 +291,7 @@
 
 		if (file)
 		{
-			reader.readAsDataURL(file); //reads the data as a URL
-
-
+			reader.readAsDataURL(file); //reads the data as a URLk
 		}
 		else
 		{
