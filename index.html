@@ -7,8 +7,12 @@
 	</canvas>
 	<button type="button" onclick="drawBoxes()">Draw</button>
 	<button onclick="setBackground()">Load</button>
-	<br>
 
+	<input type="file" onchange="loadChar()"><br>
+	State: <input type="number" id="state">
+	<button onclick="setSetState()">Set Button</button>
+
+	<br>
 	Physics box: <br>
 	<div id="physBox">
 		X1: <input type="number" id="x1">
@@ -31,11 +35,31 @@
 				<th>y1</th>
 				<th>x2</th>
 				<th>y2</th>
+				<th>edit</th>
 				<th>delete</th>
 			</tr>
 		</table>
 	</div>
-	<button onclick="lockCoords()">Lock coordinates</button>
+
+	<br>
+	Hurtbox<br>
+	<div id="hurtboxes">
+		X1: <input type="number" id="x1hurt">
+		Y1: <input type="number" id="y1hurt"><br>
+		X2: <input type="number" id="x2hurt">
+		Y2: <input type="number" id="y2hurt"><br>
+		<button onclick="addHurtbox()"> Update Hurtboxes</button><br>
+		<table id="hurtTable">
+			<tr>
+				<th>x1</th>
+				<th>y1</th>
+				<th>x2</th>
+				<th>y2</th>
+				<th>edit</th>
+				<th>delete</th>
+			</tr>
+		</table>
+	</div>
 </html>
 
 <script type="text/javascript">
@@ -49,6 +73,11 @@
 	var y1hits = [];
 	var y2hits = [];
 
+	var x1hurts = [];
+	var x2hurts = [];
+	var y1hurts = [];
+	var y2hurts = [];
+
 
 	function addHitbox()
 	{
@@ -57,18 +86,78 @@
 		y1hits.push(parseInt(document.getElementById("y1hit").value));
 		y2hits.push(parseInt(document.getElementById("y2hit").value));
 		updateHitbox();
+		drawBoxes()
 	}
 
+	function addHurtbox()
+	{
+		x1hurts.push(parseInt(document.getElementById("x1hurt").value));
+		x2hurts.push(parseInt(document.getElementById("x2hurt").value));
+		y1hurts.push(parseInt(document.getElementById("y1hurt").value));
+		y2hurts.push(parseInt(document.getElementById("y2hurt").value));
+		updateHurtbox();
+		drawBoxes()
+	}
+
+
+	//updates hitbox info
 	function updateHitbox()
 	{
 		//now update the html:
-		var htmlToReplace = "<tr><th>x1</th><th>y1</th><th>x2</th><th>y2</th><th>delete</th></tr>";
+		var htmlToReplace = "<tr><th>x1</th><th>y1</th><th>x2</th><th>y2</th><th>Edit</th><th>delete</th></tr>";
 		for(var x = 0; x < x1hits.length; x++)
 		{
-			htmlToReplace += "<tr><th> <input type=\"number\" id=\"x1hit" + x + "\" value=\""+x1hits[x]+"\"></th><th><input type=\"number\" id=\"y1hit" + x + "\" value=\"" + y1hits[x] + "\"></th><th><input type=\"number\" id=\"x2hit" + x + "\" value=\"" + x2hits[x] + "\"></th><th>" + y2hits[x] + "</th><th><button onclick=deleteHitbox(" + x + ")>Delete</button></th></tr>";
+			htmlToReplace += "<tr>" +
+			"<th><input type=\"number\" id=\"x1hit" + x + "\" value=" + x1hits[x] + "></th>" + 
+			"<th><input type=\"number\" id=\"y1hit" + x + "\" value=" + y1hits[x] + "></th>" + 
+			"<th><input type=\"number\" id=\"x2hit" + x + "\" value=" + x2hits[x] + "></th>" + 
+			"<th><input type=\"number\" id=\"y2hit" + x + "\" value=" + y2hits[x] + "></th>" + 
+			"<th><button onclick=editHitbox(" + x + ")>Edit</th>" + 
+			"<th><button onclick=deleteHitbox(" + x + ")>Delete</button></th></tr>";
 		}
 
 		document.getElementById("hitTable").innerHTML = htmlToReplace;
+	}
+
+	//updates hurtbox info
+	function updateHurtbox()
+	{
+		//now update the html:
+		var htmlToReplace = "<tr><th>x1</th><th>y1</th><th>x2</th><th>y2</th><th>Edit</th><th>delete</th></tr>";
+		for(var x = 0; x < x1hurts.length; x++)
+		{
+			htmlToReplace += "<tr>" +
+			"<th><input type=\"number\" id=\"x1hurt" + x + "\" value=" + x1hurts[x] + "></th>" + 
+			"<th><input type=\"number\" id=\"y1hurt" + x + "\" value=" + y1hurts[x] + "></th>" + 
+			"<th><input type=\"number\" id=\"x2hurt" + x + "\" value=" + x2hurts[x] + "></th>" + 
+			"<th><input type=\"number\" id=\"y2hurt" + x + "\" value=" + y2hurts[x] + "></th>" + 
+			"<th><button onclick=editHurtbox(" + x + ")>Edit</th>" + 
+			"<th><button onclick=deleteHurtbox(" + x + ")>Delete</button></th></tr>";
+		}
+
+		document.getElementById("hurtTable").innerHTML = htmlToReplace;
+	}
+
+	function editHitbox(index)
+	{
+		x1hits[index] = parseInt(document.getElementById("x1hit" + index).value);
+		x2hits[index] = parseInt(document.getElementById("x2hit" + index).value);
+		y1hits[index] = parseInt(document.getElementById("y1hit" + index).value);
+		y2hits[index] = parseInt(document.getElementById("y2hit" + index).value);
+		
+		updateHitbox();
+		drawBoxes();
+	}
+
+	function editHurtbox(index)
+	{
+		x1hurts[index] = parseInt(document.getElementById("x1hurt" + index).value);
+		x2hurts[index] = parseInt(document.getElementById("x2hurt" + index).value);
+		y1hurts[index] = parseInt(document.getElementById("y1hurt" + index).value);
+		y2hurts[index] = parseInt(document.getElementById("y2hurt" + index).value);
+		
+		updateHurtbox();
+		drawBoxes();
 	}
 
 	function deleteHitbox(index)
@@ -79,6 +168,18 @@
 		y2hits.splice(index, 1);
 
 		updateHitbox();
+		drawBoxes();
+	}
+
+	function deleteHurtbox(index)
+	{
+		x1hurts.splice(index, 1);
+		x2hurts.splice(index, 1);
+		y1hurts.splice(index, 1);
+		y2hurts.splice(index, 1);
+
+		updateHurtbox();
+		drawBoxes();
 	}
 
 	function drawBoxes()
@@ -92,6 +193,7 @@
 		ctx.drawImage(image, 0, 0);
 
 		drawPhys(ctx);
+		drawHurt(ctx);
 		drawHit(ctx);
 	}
 
@@ -112,6 +214,17 @@
 		for(var x = 0; x < x1hits.length; x++)
 		{
 			ctx.fillRect(x1hits[x], y1hits[x], x2hits[x] - x1hits[x], y2hits[x] - y1hits[x]);
+		}
+	}
+
+	//draw hurtboxes
+	function drawHurt(ctx)
+	{
+		ctx.globalAlpha = 0.2;
+		ctx.fillStyle="#00FF00";
+		for(var x = 0; x < x1hurts.length; x++)
+		{
+			ctx.fillRect(x1hurts[x], y1hurts[x], x2hurts[x] - x1hurts[x], y2hurts[x] - y1hurts[x]);
 		}
 	}
 
