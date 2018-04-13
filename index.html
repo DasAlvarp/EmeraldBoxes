@@ -1,20 +1,19 @@
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="jquery.csv.js"></script>
 </head>
-
+<meta charset="utf-8"/>
 <html>
 	<input type="file" onchange="previewFile()"><br>
 	<img src="" alt="previewFile" id="back" hidden="true">
-
-	<input type="file" onchange="getCharTable()"><br>
-
+	<div id="textHere"></div>
 	<canvas id="textCanvas" width="300" height="400" style="border:1px solid#000000;">
 		
 	</canvas>
 	<button type="button" onclick="drawBoxes()">Draw</button>
 	<button onclick="setBackground()">Load</button>
 
-	<input type="file" onchange="loadChar()"><br>
+	<input id="fileLoad" type="file" onchange="loadChar()"><br>
 	State: <input type="number" id="state">
 	<button onclick="setState()">Set Button</button>
 
@@ -248,45 +247,49 @@
 		y2 = parseInt(document.getElementById("y2").value);
 	}
 
-	function setBackground()
+	//loads character given file.
+	function loadChar()
 	{
-		// body...
-	}
-	
-/*	$(document).ready(function() {
-		$.ajax({
-			type: "GET",
-			url: "data.txt",
-			dataType: "text",
-			success: function(data) {loadCharTable(data);}
-    	});
-	});
-*/
-	loadChar()
-	{
-		document.getElementById("state").value = 0;//stateTable[0].State;
-
+		var preview = document.querySelector('img'); //selects the query named img
 		var file = document.querySelector('input[type=file]').files[0]; //sames as here
-		document.getElementById("state").value = 1;//stateTable[0].State;
-		loadCharTable(file)
+		var reader = new FileReader();
+		console.log("starting " + file.name);
+
+		var text;
+	
+		reader.onloadend = function()
+		{
+			console.log("LOG");
+			text = reader.result;
+		}
+
+		if(file)
+		{
+			console.log("read file");
+			text = reader.readAsText(file);
+			document.getElementById('textHere').innerHTML = text;
+			stateTable = $.csv.toObjects(text);
+			document.getElementById("state").value = stateTable[0].State;
+			
+		}
+		else
+		{
+			console.log("did not read");
+		}
 	}
 
-	function loadCharTable(csv)
-	{
-//		stateTable = $.csv.toObjects(csv);
-		document.getElementById("state").value = 2;//stateTable[0].State;
-	}
+	//loadChar();
 
 	function previewFile()
 	{
 		var preview = document.querySelector('img'); //selects the query named img
 		var file    = document.querySelector('input[type=file]').files[0]; //sames as here
 		var reader  = new FileReader();
+		console.log(file.name);
 
 		reader.onloadend = function ()
 		{
 			preview.src = reader.result;
-			
 		}
 
 		if (file)
@@ -299,5 +302,5 @@
 		}
 	}
 
-	previewFile();
+	//previewFile();
 </script>
